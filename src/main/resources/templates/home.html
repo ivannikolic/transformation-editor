@@ -1,0 +1,78 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Transformation editor</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" media="screen"/>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"/>
+    <style>
+        html, body {
+            height: 100%;
+        }
+        .container-fluid.content {
+            height: 100%;
+        }
+        .container-fluid.content>.row {
+            height: 100%;
+        }
+        .view {
+            height: 100%;
+            overflow: auto;
+        }
+        textarea {
+            white-space: pre !important;
+            overflow-wrap: normal !important;
+            width: 100% !important;
+            height: 100% !important;
+            overflow-y: scroll !important;
+            overflow-x: scroll !important;
+            resize: none !important;
+        }
+    </style>
+    <script>
+        var typingTimer;
+        var doneTypingInterval = 2000;
+
+        $(window).on('load', function() {
+            registerInput($('#input'));
+            registerInput($('#output'));
+
+
+            function registerInput(input) {
+                input.on('keyup', function () {
+                    clearTimeout(typingTimer);
+                    typingTimer = setTimeout(doneTyping, doneTypingInterval);
+                });
+                input.on('keydown', function () {
+                    clearTimeout(typingTimer);
+                });
+                function doneTyping () {
+                    console.log("done typing");
+                    $.post("run", function(data, status){
+                        console.log("Data: " + data + "\nStatus: " + status);
+                    });
+                }
+            }
+        });
+    </script>
+</head>
+<body>
+
+
+<div class="container-fluid content">
+    <div class="row">
+        <div class="col-sm-4 view">
+            <textarea class="form-control" id="input"></textarea>
+        </div>
+        <div class="col-sm-4 view">
+            <textarea class="form-control" id="output"></textarea>
+        </div>
+        <div class="col-sm-4 view">
+            <textarea class="form-control" id="script"></textarea>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
